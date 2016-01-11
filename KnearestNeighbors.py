@@ -8,12 +8,6 @@ from sklearn import neighbors
 from matplotlib.colors import ListedColormap
 
 
-
-X, y = make_classification(n_features=4, n_redundant=0, n_informative=1,
-                           n_clusters_per_class=1, class_sep=5, random_state=5)
-
-train_X, test_X, train_y, test_y = train_test_split(X, y)
-
 def euclidean_distance(n1, n2):
     return np.sqrt(np.sum((n1 - n2) ** 2))
 
@@ -45,24 +39,29 @@ class KnearestNeighbors(object):
     def score(self, y_preds, y_test):
         return skm.accuracy_score(y_preds, y_test)
 
-knn = KnearestNeighbors(k=3, distance=euclidean_distance)
+if __name__ == '__main__':
+    X, y = make_classification(n_features=4, n_redundant=0, n_informative=1,
+                           n_clusters_per_class=1, class_sep=5, random_state=5)
 
-cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA'])
-cmap_bold = ListedColormap(['#FF0000', '#00FF00'])
-h = .5
-X = X[:, :2]
-knn.fit(X,y)
-x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+    train_X, test_X, train_y, test_y = train_test_split(X, y)
+    knn = KnearestNeighbors(k=3, distance=euclidean_distance)
+
+    cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA'])
+    cmap_bold = ListedColormap(['#FF0000', '#00FF00'])
+    h = .5
+    X = X[:, :2]
+    knn.fit(X,y)
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
-Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
-Z = np.array(Z)
-Z = Z.reshape(xx.shape)
-plt.figure()
-plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
-plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold)
-plt.xlim(xx.min(), xx.max())
-plt.ylim(yy.min(), yy.max())
-plt.title("3-Class classification (k = %i, weights = '%s')" % (3, weights))
-pltl.show()
+    Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = np.array(Z)
+    Z = Z.reshape(xx.shape)
+    plt.figure()
+    plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
+    plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold)
+    plt.xlim(xx.min(), xx.max())
+    plt.ylim(yy.min(), yy.max())
+    plt.title("3-Class classification (k = %i, weights = '%s')" % (3, weights))
+    pltl.show()
